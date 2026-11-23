@@ -1,0 +1,68 @@
+import { parse, stringify, JsonValue } from "@std/json";
+
+// @zatarain/json-tools: defensive helpers over @std/json's JsonValue.
+// Every accessor returns null (or an empty list) instead of raising when
+// the document shape does not match, so callers can probe untrusted JSON
+// without try/catch boilerplate. Use validateAs for strict contracts.
+
+export function tryParse(text: string): JsonValue? {
+    try {
+        return parse(text);
+    } catch (error: Error) {
+        return null;
+    }
+    return null;
+}
+
+export function kindOf(document: JsonValue): string {
+    return document.kind();
+}
+
+export function hasKey(document: JsonValue, key: string): boolean {
+    return document.has(key);
+}
+
+export function keysOf(document: JsonValue): list<string> {
+    try {
+        return document.keys();
+    } catch (error: Error) {
+        return [];
+    }
+    return [];
+}
+
+export function getString(document: JsonValue, key: string): string? {
+    if (!document.has(key)) {
+        return null;
+    }
+    try {
+        return document.get(key).asString();
+    } catch (error: Error) {
+        return null;
+    }
+    return null;
+}
+
+export function getNumber(document: JsonValue, key: string): float64? {
+    if (!document.has(key)) {
+        return null;
+    }
+    try {
+        return document.get(key).asNumber();
+    } catch (error: Error) {
+        return null;
+    }
+    return null;
+}
+
+export function getBoolean(document: JsonValue, key: string): boolean? {
+    if (!document.has(key)) {
+        return null;
+    }
+    try {
+        return document.get(key).asBoolean();
+    } catch (error: Error) {
+        return null;
+    }
+    return null;
+}
